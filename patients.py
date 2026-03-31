@@ -1,8 +1,20 @@
+
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
-from hospital_database import get_db_connection
+from Hospital_database import get_db_connection
+from fastapi.middleware.cors import CORSMiddleware
+
+
 
 app = FastAPI(title="Hospital Management System")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"], # يسمح لأي ملف بالاتصال
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 class Sick(BaseModel):
     name: str = Field(..., example="Ahmed")
@@ -65,4 +77,4 @@ def delete_patient(sick_id: int):
 if __name__ == "__main__":
     import uvicorn
     
-    uvicorn.run("patients:app", host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run(app, host="0.0.0.0", port=8000)
